@@ -355,9 +355,16 @@ class Service extends MX_Controller
         //     }
         // }
 
-        $this->session->set_userdata(array('message' => display('successfully_added')));
-        redirect(base_url('service_details/' . $invoice_id));
+        // $this->session->set_userdata(array('message' => display('successfully_added')));
+        // redirect(base_url('service_details/' . $invoice_id));
         // }
+
+        $base_url = base_url();
+        echo '
+<script type="text/javascript">
+    alert("Service Details Saved successfully");
+    window.location.href = "' . $base_url . 'service_details/' . $invoice_id . '";
+</script>';
     }
 
 
