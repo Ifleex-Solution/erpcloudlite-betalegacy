@@ -6,6 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 # Dynamic style php file
 # Developed by :Isahaq
 #------------------------------------    
+require_once("./vendor/Config.php");
 
 class Service extends MX_Controller
 {
@@ -224,7 +225,7 @@ class Service extends MX_Controller
             'taxes'         => $this->service_model->tax_fields(),
         );
         $data["customer_dropdown"] = $this->service_model->customer_dropdown();
-        $data['all_pmethod'] = $this->service_model->pmethod_dropdown();
+        $data['all_pmethod'] = $this->pmethod_dropdown();
         $data['service_list'] = $this->service_model->service_list();
         $data['module']      = 'service';
         // $vatortax            = $this->service_model->vat_tax_setting();
@@ -235,6 +236,19 @@ class Service extends MX_Controller
         }
 
         echo modules::run('template/layout', $data);
+    }
+
+    public function pmethod_dropdown()
+    {
+        $this->db->select('*')
+            ->from('payment_type')
+            // ->where('PHeadName', 'Cash')
+            ->where('status', '1');
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            return $query->result_array();
+        }
+        return false;
     }
 
     public function getservice_list()
@@ -318,32 +332,32 @@ class Service extends MX_Controller
     public function insert_service_invoice()
     {
 
-        $finyear = $this->input->post('finyear', true);
-        if ($finyear <= 0) {
-            $this->session->set_flashdata('exception', 'Please Create Financial Year First From Accounts > Financial Year.');
-            redirect("add_service_invoice");
-        } else {
-            $invoice_id = $this->service_model->invoice_entry();
+        // $finyear = $this->input->post('finyear', true);
+        // if ($finyear <= 0) {
+        //     $this->session->set_flashdata('exception', 'Please Create Financial Year First From Accounts > Financial Year.');
+        //     redirect("add_service_invoice");
+        // } else {
+        $invoice_id = $this->service_model->invoice_entry();
 
-            $mailsetting = $this->db->select('*')->from('email_config')->get()->result_array();
+        // $mailsetting = $this->db->select('*')->from('email_config')->get()->result_array();
 
-            $setting_data = $this->db->select('is_autoapprove_v')->from('web_setting')->where('setting_id', 1)->get()->result_array();
-            if ($setting_data[0]['is_autoapprove_v'] == 1) {
+        // $setting_data = $this->db->select('is_autoapprove_v')->from('web_setting')->where('setting_id', 1)->get()->result_array();
+        // if ($setting_data[0]['is_autoapprove_v'] == 1) {
 
-                $new = $this->autoapprove($invoice_id);
-            }
+        //     $new = $this->autoapprove($invoice_id);
+        // }
 
-            if ($mailsetting[0]['isservice'] == 1) {
-                $mail = $this->invoice_pdf_generate($invoice_id);
+        // if ($mailsetting[0]['isservice'] == 1) {
+        //     $mail = $this->invoice_pdf_generate($invoice_id);
 
-                if ($mail == 0) {
-                    $this->session->set_userdata(array('exception' => display('please_config_your_mail_setting')));
-                }
-            }
+        //     if ($mail == 0) {
+        //         $this->session->set_userdata(array('exception' => display('please_config_your_mail_setting')));
+        //     }
+        // }
 
-            $this->session->set_userdata(array('message' => display('successfully_added')));
-            redirect(base_url('service_details/' . $invoice_id));
-        }
+        $this->session->set_userdata(array('message' => display('successfully_added')));
+        redirect(base_url('service_details/' . $invoice_id));
+        // }
     }
 
 

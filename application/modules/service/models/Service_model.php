@@ -6,6 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     # Dynamic style php file
     # Developed by :Isahaq
     #------------------------------------    
+require_once("./vendor/Config.php");
 
 class Service_model extends CI_Model {
 
@@ -19,7 +20,9 @@ class Service_model extends CI_Model {
   
 	public function customer_dropdown()
 	{
-		return $this->db->select("*")
+        $encryption_key = Config::$encryption_key;
+
+		return $this->db->select("customer_id, AES_DECRYPT(customer_name, '$encryption_key') AS customer_name ")
 			->from('customer_information')
 			->order_by('customer_name', 'asc')
 			->get()
@@ -279,27 +282,27 @@ class Service_model extends CI_Model {
             redirect(base_url() . 'add_service_invoice');
         }
         //Full or partial Payment record.
-        $paid_amount = $this->input->post('paid_amount',true);
+        // $paid_amount = $this->input->post('paid_amount',true);
     
-        if ($multipaytype[0] == 0) {
-            $is_credit = 1;
-        }
-        else {
-            $is_credit = '';
-        }
-        $fixordyn = $this->db->select('*')->from('vat_tax_setting')->get()->row();
-        $is_fixed   = '';
-        $is_dynamic = '';
+        // if ($multipaytype[0] == 0) {
+        //     $is_credit = 1;
+        // }
+        // else {
+        //     $is_credit = '';
+        // }
+        // $fixordyn = $this->db->select('*')->from('vat_tax_setting')->get()->row();
+        // $is_fixed   = '';
+        // $is_dynamic = '';
 
-        if($fixordyn->fixed_tax == 1 ){
-        $is_fixed   = 1;
-        $is_dynamic = 0;
-        $paid_tax = $this->input->post('total_vat_amnt',TRUE);
-        }elseif($fixordyn->dynamic_tax == 1 ){
-        $is_fixed   = 0;
-        $is_dynamic = 1;
-        $paid_tax = $this->input->post('total_tax_amount',TRUE);
-        }
+        // if($fixordyn->fixed_tax == 1 ){
+        // $is_fixed   = 1;
+        // $is_dynamic = 0;
+        // $paid_tax = $this->input->post('total_vat_amnt',TRUE);
+        // }elseif($fixordyn->dynamic_tax == 1 ){
+        // $is_fixed   = 0;
+        // $is_dynamic = 1;
+        // $paid_tax = $this->input->post('total_tax_amount',TRUE);
+        // }
         //Data inserting into invoice table
         $datainv = array(
             'employee_id'     => 0,
@@ -312,68 +315,66 @@ class Service_model extends CI_Model {
             'invoice_discount'=> $this->input->post('invoice_discount',true),
             'total_vat_amnt'  => $this->input->post('total_vat_amnt',true),
             'total_discount'  => $this->input->post('total_discount',true),
-            'shipping_cost'   => $this->input->post('shipping_cost',true),
-            'paid_amount'     => $this->input->post('paid_amount',true),
-            'due_amount'      => $this->input->post('due_amount',true),
-            'previous'        => $this->input->post('previous',true),
+            // 'shipping_cost'   => $this->input->post('shipping_cost',true),
+            // 'previous'        => $this->input->post('previous',true),
             'sales_by'        => $this->session->userdata('id'),
-            'is_credit'       =>  $is_credit,
-            'is_fixed'        =>  $is_fixed,
-            'is_dynamic'      =>  $is_dynamic,
+            // 'is_credit'       =>  $is_credit,
+            // 'is_fixed'        =>  $is_fixed,
+            // 'is_dynamic'      =>  $is_dynamic,
             
         );
         $this->db->insert('service_invoice', $datainv);
         $inv_insert_id =  $this->db->insert_id();  
        
 
-        $predefine_account  = $this->db->select('*')->from('acc_predefine_account')->get()->row();
-        $Narration          = "Service Sales Voucher";
-        $Comment            = "Service Sales Voucher for customer";
-        $reVID              = $predefine_account->serviceCode;
+        // $predefine_account  = $this->db->select('*')->from('acc_predefine_account')->get()->row();
+        // $Narration          = "Service Sales Voucher";
+        // $Comment            = "Service Sales Voucher for customer";
+        // $reVID              = $predefine_account->serviceCode;
 
-        if($multipaytype && $multipayamount){
+        // if($multipaytype && $multipayamount){
 
-            if ($multipaytype[0] == 0) { 
+        //     if ($multipaytype[0] == 0) { 
 
-                $amount_pay = $datainv['total_amount'];
-                $amnt_type  = 'Debit';
-                $COAID      = $predefine_account->customerCode;
-                $subcode    = $this->db->select('*')->from('acc_subcode')->where('referenceNo', $customer_id)->where('subTypeId', 3)->get()->row()->id;
-                $this->insert_sale_creditvoucher($is_credit,$invoice_id,$COAID,$amnt_type,$amount_pay,$Narration,$Comment,$reVID,$subcode);
+        //         $amount_pay = $datainv['total_amount'];
+        //         $amnt_type  = 'Debit';
+        //         $COAID      = $predefine_account->customerCode;
+        //         $subcode    = $this->db->select('*')->from('acc_subcode')->where('referenceNo', $customer_id)->where('subTypeId', 3)->get()->row()->id;
+        //         $this->insert_sale_creditvoucher($is_credit,$invoice_id,$COAID,$amnt_type,$amount_pay,$Narration,$Comment,$reVID,$subcode);
 
-            }else {
+        //     }else {
                 
-                $amnt_type = 'Debit';
-                for ($i=0; $i < count($multipaytype); $i++) {
+        //         $amnt_type = 'Debit';
+        //         for ($i=0; $i < count($multipaytype); $i++) {
 
-                    $COAID = $multipaytype[$i];
-                    $amount_pay = $multipayamount[$i];
+        //             $COAID = $multipaytype[$i];
+        //             $amount_pay = $multipayamount[$i];
 
-                    $this->insert_sale_creditvoucher($is_credit,$invoice_id,$COAID,$amnt_type,$amount_pay,$Narration,$Comment,$reVID);
+        //             $this->insert_sale_creditvoucher($is_credit,$invoice_id,$COAID,$amnt_type,$amount_pay,$Narration,$Comment,$reVID);
                     
-                }
+        //         }
 
-                if ($this->input->post('due_amount',TRUE) > 0) {
-                    $amount_pay2 = $datainv['due_amount'];
-                    $amnt_type2  = 'Debit';
-                    $COAID2      = $predefine_account->customerCode;
-                    $subcode2    = $this->db->select('*')->from('acc_subcode')->where('referenceNo', $customer_id)->where('subTypeId', 3)->get()->row()->id;
-                    $this->insert_sale_creditvoucher(1,$invoice_id,$COAID2,$amnt_type2,$amount_pay2,$Narration,$Comment,$reVID,$subcode2);
+        //         if ($this->input->post('due_amount',TRUE) > 0) {
+        //             $amount_pay2 = $datainv['due_amount'];
+        //             $amnt_type2  = 'Debit';
+        //             $COAID2      = $predefine_account->customerCode;
+        //             $subcode2    = $this->db->select('*')->from('acc_subcode')->where('referenceNo', $customer_id)->where('subTypeId', 3)->get()->row()->id;
+        //             $this->insert_sale_creditvoucher(1,$invoice_id,$COAID2,$amnt_type2,$amount_pay2,$Narration,$Comment,$reVID,$subcode2);
 
-                }
+        //         }
 
-            }
+        //     }
         
-        }
+        // }
         
         // for taxs start
-        $taxCOAID     = $predefine_account->tax;
-        $taxvalue     = $paid_tax;
-        $taxNarration = "Tax for Service Sales Voucher";
-        $taxComment   = "Tax for Service Sales Voucher for customer";
-        $taxreVID     = $predefine_account->prov_state_tax;
+        // $taxCOAID     = $predefine_account->tax;
+        // $taxvalue     = $paid_tax;
+        // $taxNarration = "Tax for Service Sales Voucher";
+        // $taxComment   = "Tax for Service Sales Voucher for customer";
+        // $taxreVID     = $predefine_account->prov_state_tax;
 
-        $this->insert_sale_taxvoucher($invoice_id,$taxCOAID,$taxvalue,$taxNarration,$taxComment,$taxreVID);
+        // $this->insert_sale_taxvoucher($invoice_id,$taxCOAID,$taxvalue,$taxNarration,$taxComment,$taxreVID);
         // for taxs end
 
         $quantity            = $this->input->post('product_quantity',true);
@@ -417,29 +418,29 @@ class Service_model extends CI_Model {
            
 
         }
-         for($j=0;$j<$num_column;$j++){
-                $taxfield = 'tax'.$j;
-                $taxvalue = 'total_tax'.$j;
-              $taxdata[$taxfield]=$this->input->post($taxvalue);
-            }
-            $taxdata['customer_id'] = $customer_id;
-            $taxdata['date']        = (!empty($this->input->post('invoice_date',true))?$this->input->post('invoice_date',true):date('Y-m-d'));
-            $taxdata['relation_id'] = $invoice_id;
-            $this->db->insert('tax_collection',$taxdata);
+        //  for($j=0;$j<$num_column;$j++){
+        //         $taxfield = 'tax'.$j;
+        //         $taxvalue = 'total_tax'.$j;
+        //       $taxdata[$taxfield]=$this->input->post($taxvalue);
+        //     }
+        //     $taxdata['customer_id'] = $customer_id;
+        //     $taxdata['date']        = (!empty($this->input->post('invoice_date',true))?$this->input->post('invoice_date',true):date('Y-m-d'));
+        //     $taxdata['relation_id'] = $invoice_id;
+        //     $this->db->insert('tax_collection',$taxdata);
 
-        $message = 'Mr.'.$cusifo->customer_name.',
-        '.'Your Service Charge '.$this->input->post('grand_total_price',true).' '.$currency_details[0]['currency'].' You have paid .'.$this->input->post('paid_amount').' '.$currency_details[0]['currency'];
-           $config_data = $this->db->select('*')->from('sms_settings')->get()->row();
-        if($config_data->isservice == 1){
-          $this->smsgateway->send([
-            'apiProvider' => 'nexmo',
-            'username'    => $config_data->api_key,
-            'password'    => $config_data->api_secret,
-            'from'        => $config_data->from,
-            'to'          => $cusifo->customer_mobile,
-            'message'     => $message
-        ]);
-      }
+        // $message = 'Mr.'.$cusifo->customer_name.',
+        // '.'Your Service Charge '.$this->input->post('grand_total_price',true).' '.$currency_details[0]['currency'].' You have paid .'.$this->input->post('paid_amount').' '.$currency_details[0]['currency'];
+        //    $config_data = $this->db->select('*')->from('sms_settings')->get()->row();
+        // if($config_data->isservice == 1){
+        //   $this->smsgateway->send([
+        //     'apiProvider' => 'nexmo',
+        //     'username'    => $config_data->api_key,
+        //     'password'    => $config_data->api_secret,
+        //     'from'        => $config_data->from,
+        //     'to'          => $cusifo->customer_mobile,
+        //     'message'     => $message
+        // ]);
+    //   }
         return $invoice_id;
     }
 
