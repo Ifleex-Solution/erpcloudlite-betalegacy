@@ -2298,7 +2298,7 @@ ORDER by createddate desc;";
                 }
 
                 if ($row['incident'] == "wholesale") {
-                    $sheet->setCellValue('D' . $startRow, "Whole Sale");
+                    $sheet->setCellValue('D' . $startRow, "Wholesale");
                 }
 
                 if ($row['incident'] == "openingstock") {

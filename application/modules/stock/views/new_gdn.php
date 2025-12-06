@@ -69,7 +69,7 @@
                                 <select class="form-control" id="type" required name="type" tabindex="3" onchange="get_type('type')">
                                     <option value=""></option>
                                     <option value="sale">Sales</option>
-                                    <option value="wholesale">Whole Sale</option>
+                                    <option value="wholesale">Wholesale</option>
                                     <option value="purchasereturn">Purchase Return</option>
                                     <option value="storetransfer">Store Transfer</option>
                                     <option value="stockdisposal">Stock Disposal</option>
@@ -950,7 +950,7 @@ echo "</script>";
         $typeDropdown.empty();
         $typeDropdown.append('<option value="" disabled selected>Select Type</option>'); // Add default option
         $typeDropdown.append('<option value="sale">Sales</option>');
-        $typeDropdown.append('<option value="wholesale">Whole Sale</option>');
+        $typeDropdown.append('<option value="wholesale">Wholesale</option>');
         $typeDropdown.append('<option value="purchasereturn">Purchase Return</option>');
         $typeDropdown.append('<option value="storetransfer">Store Transfer</option>');
         $typeDropdown.append('<option value="stockdisposal">Stock Disposal</option>');

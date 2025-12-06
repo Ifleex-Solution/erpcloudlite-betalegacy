@@ -162,7 +162,7 @@
             $incidentDropdown.empty();
             $incidentDropdown.append('<option value=""></option>');
             $incidentDropdown.append('<option value="sale">Sale</option>');
-            $incidentDropdown.append('<option value="wholesale">Whole Sale</option>');
+            $incidentDropdown.append('<option value="wholesale">Wholesale</option>');
         }
 
         if (document.getElementById('scenario').value === "stock") {
@@ -190,7 +190,7 @@
             $incidentDropdown.empty();
             $incidentDropdown.append('<option value=""></option>');
             $incidentDropdown.append('<option value="sale">Sale</option>');
-            $incidentDropdown.append('<option value="wholesale">Whole Sale</option>');
+            $incidentDropdown.append('<option value="wholesale">Wholesale</option>');
             $incidentDropdown.append('<option value="purchasereturn">Purchase Return</option>');
             $incidentDropdown.append('<option value="storetransfer">Store Transfer</option>');
             $incidentDropdown.append('<option value="stockdisposal">Stock Disposal</option>');

@@ -108,7 +108,7 @@
                                 <select class="form-control" id="incidenttype" required name="incidenttype" tabindex="3">
                                     <option value=""></option>
                                     <option value="1">Sales</option>
-                                    <option value="2">Whole Sale</option>
+                                    <option value="2">Wholesale</option>
 
                                 </select>
                             </div>
@@ -524,7 +524,7 @@ echo "</script>";
                     $incidenttypeDropdown.empty();
                     $incidenttypeDropdown.append('<option value="" disabled selected>Select Incident Type</option>'); // Add default option
                     $incidenttypeDropdown.append('<option value="1">Sales</option>');
-                    $incidenttypeDropdown.append('<option value="2">Whole Sale</option>');
+                    $incidenttypeDropdown.append('<option value="2">Wholesale</option>');
                     $incidenttypeDropdown.val(sales[0].incidenttype)
 
                     document.getElementById('total_discount_ammount').value = sales[0].total_discount_ammount;
@@ -950,14 +950,14 @@ echo "</script>";
                         product_name: dropdown.options[dropdown.selectedIndex].text,
                         store: document.getElementById('store' + i).value,
                         quantity: document.getElementById('qty' + i).value,
-                        product_rate: document.getElementById('product_rate' + i).value,
-                        discount: document.getElementById('discount' + i).value,
-                        discount_value: document.getElementById('discount_value' + i).value,
-                        vat_percent: document.getElementById('vat_percent' + i).value,
-                        vat_value: document.getElementById('vat_value' + i).value,
-                        total_price: document.getElementById('total_price' + i).value,
-                        total_discount: document.getElementById('total_discount' + i).value,
-                        all_discount: document.getElementById('all_discount' + i).value,
+                        product_rate:document.getElementById('product_rate' + i).value? document.getElementById('product_rate' + i).value:"0",
+                        discount: document.getElementById('discount' + i).value?document.getElementById('discount' + i).value:"0",
+                        discount_value:document.getElementById('discount_value' + i).value? document.getElementById('discount_value' + i).value:"0",
+                        vat_percent: document.getElementById('vat_percent' + i).value?document.getElementById('vat_percent' + i).value:"0",
+                        vat_value: document.getElementById('vat_value' + i).value?document.getElementById('vat_value' + i).value:"0",
+                        total_price: document.getElementById('total_price' + i).value?document.getElementById('total_price' + i).value:"0",
+                        total_discount:document.getElementById('total_discount' + i).value? document.getElementById('total_discount' + i).value:"0",
+                        all_discount: document.getElementById('all_discount' + i).value?document.getElementById('all_discount' + i).value:"0",
                     });
                 }
             }
@@ -1010,6 +1010,7 @@ echo "</script>";
 
 
         } else {
+            // console.log(arrItem)
 
             $.ajax({
                 url: $('#base_url').val() + 'invoice/invoice/save_sale',

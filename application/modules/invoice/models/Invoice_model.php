@@ -1859,7 +1859,7 @@ class Invoice_model extends CI_Model
              OR (
         CASE 
             WHEN po.incidenttype = 1 THEN 'Sales'
-            WHEN po.incidenttype = 2 THEN 'Whole Sales'
+            WHEN po.incidenttype = 2 THEN 'Wholesale'
             ELSE ''
         END
     ) LIKE '%" . $searchValue . "%'
@@ -1869,7 +1869,7 @@ class Invoice_model extends CI_Model
         ## Total number of records without filtering
         $this->db->select('count(*) as allcount, CASE 
             WHEN po.incidenttype = 1 THEN \'Sales\'
-            WHEN po.incidenttype = 2 THEN \'Whole Sales\'
+            WHEN po.incidenttype = 2 THEN \'Wholesale\'
             ELSE \'\'
         END AS incident');
         $this->db->from('sale po');
@@ -1894,7 +1894,7 @@ class Invoice_model extends CI_Model
         //     ## Total number of record with filtering
         $this->db->select('count(*) as allcount, CASE 
             WHEN po.incidenttype = 1 THEN \'Sales\'
-            WHEN po.incidenttype = 2 THEN \'Whole Sales\'
+            WHEN po.incidenttype = 2 THEN \'Wholesale\'
             ELSE \'\'
         END AS incident');
         $this->db->from('sale po');
@@ -1936,7 +1936,7 @@ class Invoice_model extends CI_Model
          AES_DECRYPT(po.total,"' . $encryption_key . '") AS total,
          CASE 
             WHEN po.incidenttype = 1 THEN \'Sales\'
-            WHEN po.incidenttype = 2 THEN \'Whole Sales\'
+            WHEN po.incidenttype = 2 THEN \'Wholesale\'
             ELSE \'\'
         END AS incident,pt.name AS paymenttype,
         po.details,
