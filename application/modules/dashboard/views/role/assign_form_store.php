@@ -96,7 +96,9 @@
                 url: $('#base_url').val() + 'dashboard/permission/update_secstore',
                 data: {
                     id: id,
-                    status: checkbox.checked?1:0
+                    status: checkbox.checked?1:0,
+                     userid:$('#userid').val()
+
                 },
                 success: function(data1) {
                     userStore($('#userid').val())

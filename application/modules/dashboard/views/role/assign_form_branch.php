@@ -96,7 +96,8 @@
                 url: $('#base_url').val() + 'dashboard/permission/update_secbranch',
                 data: {
                     id: id,
-                    status: checkbox.checked?1:0
+                    status: checkbox.checked?1:0,
+                     userid:$('#userid').val()
                 },
                 success: function(data1) {
                     userBranch($('#userid').val())

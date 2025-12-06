@@ -430,11 +430,14 @@ class Permission extends MX_Controller
 
         $id = $this->input->post('id', TRUE);
         $status = $this->input->post('status', TRUE);
-        
+        $userid = $this->input->post('userid', TRUE);
+
         // Sanity check
         if ($id) {
             // Reset all to 0
-            $this->db->update('sec_branch', ['default' => 0]);
+            $this->db
+             ->where('userid', $userid)
+           -> update('sec_branch', ['default' => 0]);
         
             // If status is true, set selected one to 1
             if ($status==1) {
@@ -598,11 +601,14 @@ class Permission extends MX_Controller
 
         $id = $this->input->post('id', TRUE);
         $status = $this->input->post('status', TRUE);
+                $userid = $this->input->post('userid', TRUE);
         
         // Sanity check
         if ($id) {
             // Reset all to 0
-            $this->db->update('sec_store', ['default' => 0]);
+            $this->db
+             ->where('userid', $userid)
+            ->update('sec_store', ['default' => 0]);
         
             // If status is true, set selected one to 1
             if ($status==1) {
