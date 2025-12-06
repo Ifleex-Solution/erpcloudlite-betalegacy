@@ -41,7 +41,7 @@ class User_model extends CI_Model {
 			->join('user_login b','b.user_id = a.user_id')
 			->order_by('a.user_id', 'desc')
 			->group_by('a.user_id')
-            ->where_in('b.user_type', [1, 2])
+            // ->where_in('b.user_type', [1, 2])
 
 			->get()
 			->result();
